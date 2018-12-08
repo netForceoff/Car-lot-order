@@ -1,0 +1,335 @@
+<!DOCTYPE html>
+<html lang="ru" dir="ltr">
+  <head>
+    <meta charset="utf-8">
+    <title>Заказ партии автомобилей</title>
+    <style media="screen">
+      .display {
+        width: 500px;
+        height: 400px;
+        border: 1px solid black;
+        background: #9C9C9C;
+        padding: 10px;
+        padding-left: 10px;
+      }
+      .execution div{
+        display: inline-block;
+        width: 100px;
+        height:100px;
+        border: 1px solid black;
+      }
+      .description div {
+        display: inline-block;
+        position:relative;
+        bottom:175px;
+        display: block;
+        left: 250px;
+        width: 230px;
+        height: 175px;
+        border: 1px solid black;
+      }
+      .description span {
+        display: inline-block;
+        right: 120px;
+        bottom:195px;
+        position:relative;
+        float: right;
+      }
+      .typeBodyworks {
+        position:relative;
+        bottom: 23px;
+
+      }
+      .typeBodyworks div, .executionCar div  {
+        display: inline-block;
+        width: 100px;
+        height: 60px;
+        border: 1px solid black;
+        background:white;
+        position: relative;
+        left: 100px;
+      }
+
+      .typeBodyworks span:hover, .executionCar span:hover{
+        cursor: pointer;
+      }
+
+      .executionCar  {
+        position: relative;
+        top: 0px;
+      }
+
+      .typeBodyworks p, .executionCar p {
+        position: relative;
+        top: 30px;
+      }
+
+      .color {
+        position: relative;
+        top: 50px;
+      }
+
+      .color span {
+        padding-right: 50px;
+      }
+
+      .firm {
+        position: relative;
+        top: 20px;
+      }
+
+      .firm span {
+        padding-right: 22px;
+      }
+
+      button {
+        position: relative;
+        left: 300px;
+        bottom: 170px;
+      }
+
+      .powerful {
+        width: 230px;
+        height: 100px;
+        border: 1px solid black;
+        position: relative;
+        left: 250px;
+      }
+
+      .powerful span {
+        position: relative;
+        bottom: 20px;
+      }
+
+      .slider {
+        width:150px;
+        height:10px;
+        border: 1px solid white;
+        border-radius: 10px;
+        position:relative;
+        left:35px;
+        top: 35px;
+        background:white;
+      }
+
+      .thumb {
+        height:25px;
+        width: 10px;
+        border: 1px solid blue;
+        border-radius: 10px;
+        background: blue;
+        position:relative;
+        bottom: 8px;
+      }
+
+      .powerful input {
+        position: relative;
+        width:50px;
+        top: 10px;
+        left: 45px;
+      }
+
+      .active {
+        width: 100%;
+        background-color: blue;
+        color: white;
+        display: block;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="display">
+      <div class="firm">
+        <span>Фирма: </span>
+        <select id ="selectFirm">
+        <option selected>Выберите фирму</option>
+        <option>Nissan</option>
+        <option>Toyota</option>
+        <option>BMW</option>
+        <option>Subaru</option>
+        <option>Audi</option>
+        </select>
+      </div>
+      <div class="color">
+      <span>Цвет: </span>
+      <select id = "selectColor">
+      <option selected>Выберите цвет</option>
+      <option>Красный</option>
+      <option>Желтый</option>
+      <option>Синий</option>
+      <option>Черный</option>
+      <option>Серебристый</option>
+        </select>
+      </div>
+      <div class="powerful">
+        <span>Мощность</span>
+        <input type="text"  value="0">
+        <div class="slider">
+          <div class="thumb"></div>
+        </div>
+      </div>
+      <div class="executionCar">
+        <p>Исполнение</p>
+        <div id = "parentExecutionCar">
+          <span class="active" data-number="0">Люкс</span>
+          <span data-number="1">Стандарт</span>
+          <span data-number="2">Минимум</span>
+        </div>
+      </div>
+
+        <div class="typeBodyworks">
+          <p>Тип кузова</p>
+          <div id = "parentTypeBodyworks">
+            <span class="active" data-number="0">Кабрилиолет</span>
+            <span data-number="1">Седан</span>
+            <span data-number="2">Универсал</span>
+          </div>
+        </div>
+
+
+        <div class="description">
+          <span>Описание модели</span>
+        <div id = "conclusion"></div>
+        <button type="button">Зафиксировать</button>
+        </div>
+      </div>
+
+    <script type="text/javascript">
+      var sliderElem = document.querySelector('.slider');
+      var thumbElem = sliderElem.children[0];
+      var inputPawerfull = document.querySelector('input');
+
+      var parentExecutionCar = document.getElementById('parentExecutionCar');
+      var parentTypeBodyworks = document.getElementById('parentTypeBodyworks');
+
+      var button = document.querySelector('button');
+      var divConclusion = document.getElementById('conclusion');
+
+      scrollAnimationDiv(sliderElem, thumbElem, inputPawerfull);
+      initTabs(parentExecutionCar, parentTypeBodyworks);
+      displayOutput(button, divConclusion, parentExecutionCar, parentTypeBodyworks);
+
+      function displayOutput(button, divConclusion, parentExecutionCar, parentTypeBodyworks){
+        var selectFirm = document.getElementById('selectFirm');
+        var selectColor = document.getElementById('selectColor');
+        var activateElemExecutionCar = parentExecutionCar.querySelectorAll('span');
+        var activateElemTypeBodyworks = parentTypeBodyworks.querySelectorAll('span');
+
+        button.addEventListener('click', function() {
+          divConclusion.innerHTML = '<p>' + 'Фирма: ' + getOption(selectFirm) + '</p>'+
+          '<p>' + 'Цвет: ' + getOption(selectColor) + '</p>' +
+          '<p>' + 'Мощность: ' + inputPawerfull.value + ' л/с' + '</p>' +
+          '<p>' + 'Исполнение: ' + getActivateElem(activateElemExecutionCar) + '</p>' +
+          '<p>' + 'Тип кузова: ' + getActivateElem(activateElemTypeBodyworks) + '</p>';
+        });
+      }
+
+      function  getActivateElem(arr) {
+        for (let elem of arr) {
+          if (elem.classList.contains('active')) {
+            return elem.innerHTML;
+          }
+        }
+      }
+
+      function getOption(select) {
+        var options = select.options;
+
+        for (let elem of options) {
+          if (elem.selected == true) {
+            return elem.text;
+          }
+        }
+      }
+
+      function initTabs(parentExecutionCar, parentTypeBodyworks) {
+        var spanExecutionCar = parentExecutionCar.querySelectorAll('[data-number]');
+        var spanTypeBodyworks = parentTypeBodyworks.querySelectorAll('[data-number]');
+
+        getSelectTabs(parentExecutionCar, spanExecutionCar);
+        getSelectTabs(parentTypeBodyworks, spanTypeBodyworks);
+  }
+
+    function getSelectTabs(parent, array) {
+      for (var i = 0; i < array.length; i++) {
+        array[i].addEventListener('click', function() {
+          deactivateElem(findActivateElem(parent));
+
+          var tabForActivation = findTabForActivation(parent, this.dataset.number);
+          activateElem(tabForActivation);
+        });
+      }
+    }
+
+    function addNumbers(elems) {
+      for (var i = 0; i < elems.length; i++) {
+        elems[i].dataset.number = i;
+      }
+    }
+
+    function activateElem(elem) {
+      elem.classList.add('active');
+    }
+
+    function findActivateElem(parent) {
+      return parent.querySelector('.active');
+    }
+
+    function deactivateElem(elem) {
+      elem.classList.remove('active');
+    }
+
+    function findTabForActivation(parent, number) {
+      return  parent.querySelector('[data-number="' + number + '"]')
+    }
+
+    function scrollAnimationDiv(sliderElem, thumbElem, inputPawerfull) {
+      thumbElem.onmousedown = function(e) {
+        var thumbCoords = getCoords(thumbElem);
+        var shiftX = e.pageX - thumbCoords.left;
+
+        var sliderCoords = getCoords(sliderElem);
+
+      document.onmousemove = function(e) {
+        var newLeft = e.pageX - shiftX - sliderCoords.left;
+
+        if (newLeft < 0) {
+          newLeft = 0;
+        }
+
+        var rightEdge = sliderElem.offsetWidth - thumbElem.offsetWidth;
+
+        if (newLeft > rightEdge) {
+            newLeft = rightEdge;
+        }
+
+        inputPawerfull.value = newLeft;
+        thumbElem.style.left = newLeft + 'px';
+
+        }
+
+        document.onmouseup = function() {
+        document.onmousemove = document.onmouseup = null;
+        };
+
+          return false;
+        };
+
+        thumbElem.ondragstart = function() {
+          return false;
+          };
+
+      function getCoords(elem) {
+        var box = elem.getBoundingClientRect();
+
+        return {
+          top: box.top + pageYOffset,
+          left: box.left + pageXOffset
+          };
+        }
+    }
+
+
+    </script>
+  </body>
+</html>
